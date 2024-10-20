@@ -2,9 +2,14 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import re
+
+def extract_hashtags(text):
+    if isinstance(text, str):  # Check if the input is a string
+        return re.findall(r'#\w+', text)
+    return []  # Return an empty list if the input is not a string
 
 st.header('Global Conflict Hashtag Data Analysis')
-
 
 # Load the dataset
 df = pd.read_csv('Data/conflicts_hashtag_search.csv')
@@ -89,26 +94,35 @@ st.bar_chart(conflict_exposure_pivot)
 
 st.subheader('Hashtag WordCloud')
 
-selected_hashtags = st.multiselect("Select Hashtags", hdf['hashtag'].unique())
+# Create a set to hold unique hashtags
+unique_hashtags = set()
 
-# Check if any hashtags are selected
-if selected_hashtags:
-    for tag in selected_hashtags:
-        # Filter the main dataset for the selected hashtag
-        hashtag_content = df[df['input'] == tag]['text']
+# Loop through the text column to extract hashtags
+for text in df['text']:
+    hashtags = extract_hashtags(text)
+    unique_hashtags.update(hashtags)
 
-        # Combine all text for the specific hashtag
-        text_data = ' '.join(hashtag_content)
+# Convert the set back to a list for the multiselect widget
+unique_hashtags_list = list(unique_hashtags)
 
-        # Ensure there's text to create the word cloud
-        if text_data.strip():
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text_data)
+# Create a multiselect widget for the user to choose hashtags
+selected_hashtags = st.multiselect("Select hashtags to generate word clouds:", unique_hashtags_list)
 
-            plt.figure(figsize=(10, 5))
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis('off')
-            plt.title(f"Word Cloud for Hashtag: {tag}")
-            plt.show()
-            st.pyplot(plt)  # Display the word cloud in Streamlit
-else:
-    st.write("Please select at least one hashtag to generate a word cloud.")
+# Generate a word cloud for each selected hashtag
+for tag in selected_hashtags:
+    # Extract the content related to the selected hashtag
+    hashtag_content = df[df['text'].str.contains(tag, na=False)]['text']  # Use na=False to ignore NaN values
+    
+    # Combine all text for the specific hashtag
+    text_data = ' '.join(hashtag_content)
+    
+    # Ensure there's text to create the word cloud
+    if text_data.strip():
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text_data)
+        
+        # Display the word cloud using matplotlib
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.title(f"Word Cloud for Hashtag: {tag}")
+        st.pyplot(plt)
