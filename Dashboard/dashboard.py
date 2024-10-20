@@ -89,7 +89,7 @@ st.bar_chart(conflict_exposure_pivot)
 
 st.subheader('Hashtag WordCloud')
 
-selected_hashtags = st.multiselect("Select Hashtags", hdf['input'].unique())
+selected_hashtags = st.multiselect("Select Hashtags", hdf['hashtag'].unique())
 
 # Check if any hashtags are selected
 if selected_hashtags:
