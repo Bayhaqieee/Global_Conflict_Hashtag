@@ -46,3 +46,37 @@ with col2:
     st.write(f"**Newest Post Date:** {newest_date.date()}")
     
 st.subheader('Conflict Exposure on Hashtag')
+
+conflict_types = st.multiselect("Select conflict types", df['input'].unique())
+
+# Allow the user to select the time interval
+time_interval = st.selectbox("Select time interval", ["Hour", "Day", "Week", "Month", "Year"])
+
+# Filter the data by selected conflict types
+df_conflict = df[df['input'].isin(conflict_types)]
+
+# Function to group data based on time interval
+def group_by_time(df, time_interval):
+    if time_interval == "Hour":
+        df['time_group'] = df['creationDate'].dt.hour
+    elif time_interval == "Day":
+        df['time_group'] = df['creationDate'].dt.date
+    elif time_interval == "Week":
+        df['time_group'] = df['creationDate'].dt.isocalendar().week
+    elif time_interval == "Month":
+        df['time_group'] = df['creationDate'].dt.month
+    elif time_interval == "Year":
+        df['time_group'] = df['creationDate'].dt.year
+    return df
+
+# Group the data by the selected time interval
+df_grouped = group_by_time(df_conflict, time_interval)
+
+# Aggregate views per selected time interval
+conflict_exposure = df_grouped.groupby(['time_group', 'text']).agg({'viewsCount': 'sum'}).reset_index()
+
+# Pivot to display the data for each conflict over time
+conflict_exposure_pivot = conflict_exposure.pivot(index='time_group', columns='text', values='viewsCount')
+
+# Display the data as a bar chart
+st.bar_chart(conflict_exposure_pivot)
