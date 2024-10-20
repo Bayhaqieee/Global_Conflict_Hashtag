@@ -47,10 +47,11 @@ with col2:
     
 st.subheader('Conflict Exposure on Hashtag')
 
+# Allow the user to select conflict types
 conflict_types = st.multiselect("Select conflict types", df['input'].unique())
 
-# Allow the user to select the time interval
-time_interval = st.selectbox("Select time interval", ["Hour", "Day", "Week", "Month", "Year"])
+# Allow the user to select the time interval (excluding irrelevant ones)
+time_interval = st.selectbox("Select time interval", ["Hour", "Day (Sunday to Saturday)", "Week", "Month", "Year"])
 
 # Filter the data by selected conflict types
 df_conflict = df[df['input'].isin(conflict_types)]
@@ -59,8 +60,12 @@ df_conflict = df[df['input'].isin(conflict_types)]
 def group_by_time(df, time_interval):
     if time_interval == "Hour":
         df['time_group'] = df['creationDate'].dt.hour
-    elif time_interval == "Day":
-        df['time_group'] = df['creationDate'].dt.date
+    elif time_interval == "Day (Sunday to Saturday)":
+        # Group by day name and reorder to Sunday to Saturday
+        df['time_group'] = df['creationDate'].dt.day_name()
+        df['time_group'] = pd.Categorical(df['time_group'], 
+                                          categories=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], 
+                                          ordered=True)
     elif time_interval == "Week":
         df['time_group'] = df['creationDate'].dt.isocalendar().week
     elif time_interval == "Month":
