@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 st.header('Global Conflict Hashtag Data Analysis')
 
@@ -85,3 +86,29 @@ conflict_exposure_pivot = conflict_exposure.pivot(index='time_group', columns='t
 
 # Display the data as a bar chart
 st.bar_chart(conflict_exposure_pivot)
+
+st.subheader('Hashtag WordCloud')
+
+selected_hashtags = st.multiselect("Select Hashtags", hdf['input'].unique())
+
+# Check if any hashtags are selected
+if selected_hashtags:
+    for tag in selected_hashtags:
+        # Filter the main dataset for the selected hashtag
+        hashtag_content = df[df['input'] == tag]['text']
+
+        # Combine all text for the specific hashtag
+        text_data = ' '.join(hashtag_content)
+
+        # Ensure there's text to create the word cloud
+        if text_data.strip():
+            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text_data)
+
+            plt.figure(figsize=(10, 5))
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis('off')
+            plt.title(f"Word Cloud for Hashtag: {tag}")
+            plt.show()
+            st.pyplot(plt)  # Display the word cloud in Streamlit
+else:
+    st.write("Please select at least one hashtag to generate a word cloud.")
