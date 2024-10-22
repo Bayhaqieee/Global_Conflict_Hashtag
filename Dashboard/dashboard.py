@@ -138,3 +138,18 @@ top_hashtags = df.groupby('text').agg({metric:'sum'}).reset_index().sort_values(
 # Display top hashtags
 st.bar_chart(top_hashtags.set_index('text')[metric])
 
+
+st.subheader('Social Media Engagement Rate')
+
+# Group by social media platform and calculate total likes, comments, and views
+engagement_by_platform = df.groupby('fromSocial').agg({
+    'likesCount': 'sum',
+    'commentsCount': 'sum',
+    'viewsCount': 'sum'
+}).reset_index()
+
+# Dropdown to select metric
+metric = st.selectbox("Select engagement metric", ["likesCount", "commentsCount", "viewsCount"])
+
+# Display the selected metric in a bar chart
+st.bar_chart(engagement_by_platform.set_index('fromSocial')[metric])
