@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import plotly.express as px
 import re
 
 def extract_hashtags(text):
@@ -132,11 +133,51 @@ st.subheader('Most Trending Hashtag')
 # Dropdown for metric selection
 metric = st.selectbox("Select metric", ["commentsCount", "likesCount", "viewsCount"])
 
-# Find the hashtag with the most for the selected metric
-top_hashtags = df.groupby('text').agg({metric:'sum'}).reset_index().sort_values(by=metric, ascending=False).head(10)
+# Find the top 10 hashtags based on the selected metric
+# Create a new dataframe to count occurrences of each hashtag
+hashtag_counts = {}
 
-# Display top hashtags
-st.bar_chart(top_hashtags.set_index('text')[metric])
+# Loop through the text column again to aggregate metrics for each hashtag
+for text in df['text']:
+    hashtags = extract_hashtags(text)
+    for hashtag in hashtags:
+        if hashtag not in hashtag_counts:
+            hashtag_counts[hashtag] = {metric: 0}
+        hashtag_counts[hashtag][metric] += df.loc[df['text'] == text, metric].sum()
+
+# Convert the dictionary to a DataFrame
+top_hashtags = pd.DataFrame(hashtag_counts).T.reset_index()
+top_hashtags.columns = ['hashtag', metric]  # Rename columns for clarity
+
+# Sort and select the top 10 hashtags
+top_hashtags = top_hashtags.sort_values(by=metric, ascending=False).head(10)
+
+# Create a Plotly bar chart with gradient effect
+fig = px.bar(
+    top_hashtags,
+    x='hashtag',  # Use 'hashtag' for the x-axis
+    y=metric,
+    color=metric,  # Color bars based on the metric value
+    color_continuous_scale='Blues',  # Use a gradient color scale (Blues, Reds, Greens, etc.)
+    labels={'hashtag': 'Hashtag', metric: f'Total {metric}'},
+    title=f'Top 10 Hashtags by {metric.capitalize()}'
+)
+
+# Customize the layout for better visibility
+fig.update_layout(
+    width=800,
+    height=500,
+    xaxis_title='Hashtag',
+    yaxis_title=f'Total {metric.capitalize()}',
+    coloraxis_colorbar=dict(
+        title=f'{metric.capitalize()}',
+        tickvals=[top_hashtags[metric].min(), top_hashtags[metric].max()],
+        ticktext=['Low', 'High']
+    )
+)
+
+# Display the chart in Streamlit
+st.plotly_chart(fig, use_container_width=True)
 
 
 st.subheader('Social Media Engagement Rate')
@@ -151,5 +192,27 @@ engagement_by_platform = df.groupby('fromSocial').agg({
 # Dropdown to select metric
 metric = st.selectbox("Select engagement metric", ["likesCount", "commentsCount", "viewsCount"])
 
-# Display the selected metric in a bar chart
-st.bar_chart(engagement_by_platform.set_index('fromSocial')[metric])
+# Create a Plotly bar chart
+fig = px.bar(
+    engagement_by_platform,
+    x='fromSocial',
+    y=metric,
+    color=metric,  # Color bars based on the metric value
+    color_continuous_scale='Blues',  # Use a continuous color scale (Blues, Reds, Greens, etc.)
+    labels={metric: f'Total {metric}'},
+    title=f'Social Media Engagement by {metric.capitalize()}'
+)
+
+# Customize the layout for better visibility
+fig.update_layout(
+    width=800,
+    height=500,
+    coloraxis_colorbar=dict(
+        title=f'{metric.capitalize()}',
+        tickvals=[engagement_by_platform[metric].min(), engagement_by_platform[metric].max()],
+        ticktext=['Low', 'High']
+    )
+)
+
+# Display the chart in Streamlit
+st.plotly_chart(fig, use_container_width=True)
