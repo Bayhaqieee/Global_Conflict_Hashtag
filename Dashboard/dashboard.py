@@ -126,3 +126,15 @@ for tag in selected_hashtags:
         plt.axis('off')
         plt.title(f"Word Cloud for Hashtag: {tag}")
         st.pyplot(plt)
+        
+st.subheader('Most Trending Hashtag')
+
+# Dropdown for metric selection
+metric = st.selectbox("Select metric", ["commentsCount", "likesCount", "viewsCount"])
+
+# Find the hashtag with the most for the selected metric
+top_hashtags = df.groupby('text').agg({metric:'sum'}).reset_index().sort_values(by=metric, ascending=False).head(10)
+
+# Display top hashtags
+st.bar_chart(top_hashtags.set_index('text')[metric])
+
