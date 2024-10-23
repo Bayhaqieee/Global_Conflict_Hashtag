@@ -202,8 +202,21 @@ fig.update_layout(
 # Display the chart in Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
+st.subheader('Most Trending Author')
 
-st.subheader('Social Media Engagement Rate')
+# Group by author and sum the engagement metrics
+author_engagement = df.groupby('authorMeta/name').agg({
+    'likesCount': 'sum', 
+    'commentsCount': 'sum', 
+    'viewsCount': 'sum'
+}).reset_index()
+
+# Sort by likesCount (or use a different metric as needed)
+top_authors = author_engagement.sort_values(by='likesCount', ascending=False).head(10)
+
+# Display the top authors in a bar chart
+st.bar_chart(top_authors.set_index('authorMeta/name')['likesCount'])
+
 
 # Group by social media platform and calculate total likes, comments, and views
 engagement_by_platform = df.groupby('fromSocial').agg({
@@ -212,18 +225,18 @@ engagement_by_platform = df.groupby('fromSocial').agg({
     'viewsCount': 'sum'
 }).reset_index()
 
-# Dropdown to select metric
-metric = st.selectbox("Select engagement metric", ["likesCount", "commentsCount", "viewsCount"])
+# Dropdown to select metric with a unique key
+engagement_metric = st.selectbox("Select engagement metric", ["likesCount", "commentsCount", "viewsCount"], key='engagement_metric_selectbox')
 
 # Create a Plotly bar chart
 fig = px.bar(
     engagement_by_platform,
     x='fromSocial',
-    y=metric,
-    color=metric,  # Color bars based on the metric value
-    color_continuous_scale='Blues',  # Use a continuous color scale (Blues, Reds, Greens, etc.)
-    labels={metric: f'Total {metric}'},
-    title=f'Social Media Engagement by {metric.capitalize()}'
+    y=engagement_metric,  # Use selected metric for the y-axis
+    color=engagement_metric,  # Color bars based on the selected metric
+    color_continuous_scale='Blues',  # Use a continuous color scale
+    labels={engagement_metric: f'Total {engagement_metric}'},
+    title=f'Social Media Engagement by {engagement_metric.capitalize()}'
 )
 
 # Customize the layout for better visibility
@@ -231,8 +244,8 @@ fig.update_layout(
     width=800,
     height=500,
     coloraxis_colorbar=dict(
-        title=f'{metric.capitalize()}',
-        tickvals=[engagement_by_platform[metric].min(), engagement_by_platform[metric].max()],
+        title=f'{engagement_metric.capitalize()}',
+        tickvals=[engagement_by_platform[engagement_metric].min(), engagement_by_platform[engagement_metric].max()],
         ticktext=['Low', 'High']
     )
 )
