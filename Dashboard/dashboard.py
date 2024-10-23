@@ -7,9 +7,14 @@ import plotly.express as px
 import re
 
 def extract_hashtags(text):
-    if isinstance(text, str):  # Check if the input is a string
+    if isinstance(text, str):
         return re.findall(r'#\w+', text)
-    return []  # Return an empty list if the input is not a string
+    return []
+
+def get_hashtag_length(text):
+    if isinstance(text, str):
+        return len(text)
+    return 0
 
 st.header('Global Conflict Hashtag Data Analysis')
 
@@ -115,6 +120,23 @@ line_chart = alt.Chart(engagement_over_time).mark_line().encode(
 )
 
 st.altair_chart(line_chart)
+
+st.subheader("Engagement by Hashtag Length")
+
+df['text'] = df['text'].fillna('')  # Replace NaN values with empty string
+
+# Apply the function to the 'text' column to create a new 'hashtag_length' column
+df['hashtag_length'] = df['text'].apply(get_hashtag_length)
+
+# Group by hashtag length and calculate average engagement (likes, comments, views)
+length_engagement = df.groupby('hashtag_length').agg({
+    'likesCount': 'mean',
+    'commentsCount': 'mean',
+    'viewsCount': 'mean'
+}).reset_index()
+
+# Display as a line chart using Streamlit
+st.line_chart(length_engagement.set_index('hashtag_length'))
 
 st.subheader('Hashtag WordCloud')
 
