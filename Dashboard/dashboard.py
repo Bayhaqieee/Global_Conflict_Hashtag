@@ -1,3 +1,4 @@
+import altair as alt
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -92,6 +93,28 @@ conflict_exposure_pivot = conflict_exposure.pivot(index='time_group', columns='t
 
 # Display the data as a bar chart
 st.bar_chart(conflict_exposure_pivot)
+
+# Convert 'creationDate' to datetime if not already
+df['creationDate'] = pd.to_datetime(df['creationDate'])
+
+# Filter data by selected metric (likes, comments, views)
+metric = st.selectbox("Select engagement metric", ["likesCount", "commentsCount", "viewsCount"])
+
+# Group by date and sum the engagement metric
+engagement_over_time = df.groupby(df['creationDate'].dt.date).agg({metric: 'sum'}).reset_index()
+
+# Create a line chart
+line_chart = alt.Chart(engagement_over_time).mark_line().encode(
+    x='creationDate:T',
+    y=f'{metric}:Q',
+    tooltip=['creationDate', metric]
+).properties(
+    title=f'{metric} Over Time',
+    width=600,
+    height=400
+)
+
+st.altair_chart(line_chart)
 
 st.subheader('Hashtag WordCloud')
 
