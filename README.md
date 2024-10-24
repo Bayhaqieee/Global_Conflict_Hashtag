@@ -12,7 +12,46 @@ Check out the live version of the app here: [🚧 **On Progress**]()
 
 ## Features
 
-**On Progress**
+Here's a description of the Streamlit functions and features that were created for your dashboard:
+
+### **1. Highest and Lowest Posting Time for the Most Hashtags**
+This function helps identify the time of day when posts containing hashtags are most frequently made. The data is grouped by the hour of the day to see at which times posting is most and least frequent. A bar chart visualizes the posting times, providing a clear comparison between different hours.
+
+- **Widget:** A date input widget is used to filter data by a selected date range.
+
+### **2. Conflict Showing High Exposure on Hashtags**
+This function allows users to explore which conflict-related hashtags are receiving the most exposure, measured by views. Users can filter posts based on different conflict types using a multi-select widget, and a bar chart displays the total views for each conflict hashtag.
+
+- **Widget:** A multi-select widget lets users choose conflict types from the dataset to analyze.
+
+### **3. Hashtag with the Most Comments, Likes, and Views**
+This function answers which hashtags are receiving the most engagement (comments, likes, or views). Users can toggle between the different metrics using a dropdown, and a bar chart displays the top 10 hashtags for the selected metric.
+
+- **Widget:** A dropdown widget enables users to switch between comments, likes, and views as the engagement metric.
+
+### **4. Higher Engagement of Social Media Used for Sharing Hashtags**
+This function shows which social media platform generates the highest engagement for sharing hashtags. It calculates the total number of likes, comments, and views for each platform and displays this data in a bar chart.
+
+- **Widget:** A bar chart visualizes engagement metrics (likes, comments, views) for each social media platform in the dataset.
+
+---
+
+### **Additional Recommendations:**
+
+- **Engagement Over Time**
+    - **Widget:** A line chart allows users to visualize engagement trends over time for the selected engagement metric (likes, comments, views).
+
+- **Author Analysis (Top Authors by Engagement)**
+    - **Widget:** A bar chart shows the top authors ranked by engagement metrics such as likes.
+
+- **Hashtag Word Cloud**
+    - **Widget:** A word cloud displays frequently occurring words in the hashtags.
+
+- **Engagement by Hashtag Length**
+    - **Widget:** A line chart shows the relationship between hashtag length and engagement metrics.
+
+- **Engagement by Social Platform Over Time**
+    - **Widget:** A line chart enables users to compare engagement trends across social media platforms.
 
 ## Technologies
 
