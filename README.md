@@ -44,6 +44,7 @@ Here's a description of the Streamlit functions and features that were created f
 ## Technologies
 
 - **Python:** The primary programming language used for data analysis, manipulation, and visualization tasks.
+- **NumPy:** A powerful library for data manipulation and analysis, providing data structures like DataFrames to handle structured data efficiently.
 - **Streamlit:** A web application framework that allows for the easy creation of interactive data applications and dashboards directly from Python scripts.
 - **Pandas:** A powerful library for data manipulation and analysis, providing data structures like DataFrames to handle structured data efficiently.
 - **Matplotlib:** A plotting library for creating static, interactive, and animated visualizations in Python; it provides a flexible framework for customizing plots.
