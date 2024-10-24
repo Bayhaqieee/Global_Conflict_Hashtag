@@ -5,7 +5,7 @@ streamlit_folium==0.22.1
 altair
 plotly
 wordcloud
-sklearn
+scikit-learn
 datetime
 re
 collections
