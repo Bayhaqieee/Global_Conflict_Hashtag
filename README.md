@@ -58,10 +58,8 @@ This function shows which social media platform generates the highest engagement
 - **Python:** The primary programming language used for data analysis, manipulation, and visualization tasks.
 - **Streamlit:** A web application framework that allows for the easy creation of interactive data applications and dashboards directly from Python scripts.
 - **Pandas:** A powerful library for data manipulation and analysis, providing data structures like DataFrames to handle structured data efficiently.
-- **NumPy:** A fundamental library for numerical computing in Python, offering support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions.
 - **Matplotlib:** A plotting library for creating static, interactive, and animated visualizations in Python; it provides a flexible framework for customizing plots.
 - **Seaborn:** A statistical data visualization library based on Matplotlib, offering a high-level interface for drawing attractive and informative statistical graphics.
-- **Babel:** A library for internationalizing Python applications, useful for formatting dates, numbers, and currencies according to different locales.
 - **NLTK:** The Natural Language Toolkit, a suite of libraries and programs for natural language processing (NLP) in Python, used for text processing tasks.
 - **WordCloud:** A library to generate word clouds, visualizing text data where the size of each word indicates its frequency or importance in the text.
 - **Scikit-learn:** A machine learning library that provides simple and efficient tools for data mining and data analysis, built on NumPy, SciPy, and Matplotlib.
@@ -88,5 +86,5 @@ This function shows which social media platform generates the highest engagement
 
 4. Run the application locally:
     ```bash
-    streamlit run dashboard.py
+    streamlit run Dashboard/dashboard.py
     ```
