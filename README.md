@@ -4,11 +4,11 @@ Welcome to the **Hashtag Sightseeing**! This dashboard provides insights into ne
 
 ## Live App
 
-Check out the live version of the app here: [🚧 **On Progress**]()
+Check out the live version of the app here: [Hashtag Conclusion](https://globalconflicthashtag-bhq.streamlit.app/)
 
 ## Project Status
 
-🚧 **Status**: `On Progress!`
+🚧 **Status**: `Completed!`
 
 ## Features
 
