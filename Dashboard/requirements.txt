@@ -7,5 +7,3 @@ plotly
 wordcloud
 scikit-learn
 datetime
-re
-collections
