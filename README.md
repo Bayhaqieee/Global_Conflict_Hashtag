@@ -1,6 +1,6 @@
 # Global Conflict Hashtag Dataset Analysis
 
-Welcome to the **Hashtag Sightseeing**! This dashboard provides insights into news happing around the world, and Global Conflicts that still blooming right now!
+Welcome to **Hashtag Sightseeing**! This dashboard offers valuable insights into trending news hashtags from around the globe and ongoing global conflicts. By analyzing this data, we can also track the patterns and activity levels of conflicts over the years.
 
 ## Live App
 
